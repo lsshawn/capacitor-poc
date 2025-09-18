@@ -3,6 +3,7 @@
 	import favicon from '$lib/assets/favicon.svg';
 	import { page } from '$app/state';
 	import Icon from '@iconify/svelte';
+	import { goto } from '$app/navigation';
 
 	let { children } = $props();
 
@@ -11,6 +12,11 @@
 			label: 'Camera',
 			icon: 'mdi:camera',
 			href: '/camera'
+		},
+		{
+			label: 'GPS',
+			icon: 'ic:outline-map',
+			href: '/gps'
 		}
 	];
 </script>
@@ -25,7 +31,7 @@
 
 <div class="dock">
 	{#each menus as menu}
-		<button class:dock-active={menu.href === page.url.pathname}>
+		<button class:dock-active={menu.href === page.url.pathname} onclick={() => goto(menu.href)}>
 			<Icon icon={menu.icon} />
 			<span class="dock-label">{menu.label}</span>
 		</button>
