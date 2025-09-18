@@ -1,13 +1,45 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 	import {
 		CapacitorBarcodeScanner,
 		CapacitorBarcodeScannerTypeHint
 	} from '@capacitor/barcode-scanner';
+	import { PushNotifications, type PushNotificationSchema } from '@capacitor/push-notifications';
 
 	let imageUrl: string | undefined;
 	let qrCodeData: string | undefined;
 	let scanError: string | undefined;
+	let pushToken: string | undefined;
+	let pushError: string | undefined;
+	let receivedNotifications: PushNotificationSchema[] = [];
+
+	onMount(() => {
+		// Add listeners for push notifications
+		PushNotifications.addListener('registration', (token) => {
+			console.info('Registration token: ', token.value);
+			pushToken = token.value;
+		});
+
+		PushNotifications.addListener('registrationError', (err) => {
+			console.error('Registration error: ', err.error);
+			pushError = err.error;
+		});
+
+		PushNotifications.addListener('pushNotificationReceived', (notification) => {
+			console.log('Push notification received: ', notification);
+			receivedNotifications = [...receivedNotifications, notification];
+		});
+
+		PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+			console.log(
+				'Push notification action performed',
+				notification.actionId,
+				notification.inputValue
+			);
+			// Maybe navigate to a specific page
+		});
+	});
 
 	async function takePicture() {
 		try {
@@ -36,6 +68,27 @@
 		} catch (error: any) {
 			console.error(error);
 			scanError = error.message;
+		}
+	}
+
+	async function registerForPush() {
+		pushToken = undefined;
+		pushError = undefined;
+		try {
+			let permStatus = await PushNotifications.checkPermissions();
+
+			if (permStatus.receive === 'prompt') {
+				permStatus = await PushNotifications.requestPermissions();
+			}
+
+			if (permStatus.receive !== 'granted') {
+				throw new Error('User denied permissions!');
+			}
+
+			await PushNotifications.register();
+		} catch (e: any) {
+			console.error(e);
+			pushError = e.message;
 		}
 	}
 </script>
@@ -68,6 +121,33 @@
 	<div class="card">
 		<h2>Error Scanning</h2>
 		<p style="color: red;">{scanError}</p>
+	</div>
+{/if}
+
+<div class="card">
+	<button on:click={registerForPush}>Register for Push Notifications</button>
+</div>
+
+{#if pushToken}
+	<div class="card">
+		<h2>Push Token</h2>
+		<p style="word-break: break-all;">{pushToken}</p>
+	</div>
+{/if}
+
+{#if pushError}
+	<div class="card">
+		<h2>Push Error</h2>
+		<p style="color: red;">{pushError}</p>
+	</div>
+{/if}
+
+{#if receivedNotifications.length > 0}
+	<div class="card">
+		<h2>Received Notifications</h2>
+		{#each receivedNotifications as notification}
+			<pre>{JSON.stringify(notification, null, 2)}</pre>
+		{/each}
 	</div>
 {/if}
 
