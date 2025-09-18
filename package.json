@@ -1,13 +1,13 @@
 {
-	"name": "capacitor-poc2",
+	"name": "capacitor-poc",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
-		"cap:android": "cap sync android && cap open android",
-		"cap:ios": "cap sync ios && cap open ios",
+		"cap:android": "vite build && cap sync android && cap open android",
+		"cap:ios": "vite build && cap sync ios && cap open ios",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -53,6 +53,7 @@
 		"@capacitor/geolocation": "^7.1.5",
 		"@capacitor/ios": "^7.4.3",
 		"@capacitor/push-notifications": "^7.0.3",
+		"@capacitor/splash-screen": "^7.0.3",
 		"@iconify/svelte": "^5.0.2"
 	}
 }
