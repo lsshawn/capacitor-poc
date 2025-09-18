@@ -122,4 +122,18 @@
 		height: 500px;
 		width: 100%;
 	}
+	.btn {
+		padding: 8px 16px;
+		border-radius: 4px;
+		border: none;
+		color: white;
+		cursor: pointer;
+		font-size: 16px;
+	}
+	.btn-primary {
+		background-color: #007bff;
+	}
+	.btn-danger {
+		background-color: #dc3545;
+	}
 </style>
