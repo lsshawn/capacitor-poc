@@ -5,9 +5,9 @@
 		CapacitorBarcodeScannerTypeHint
 	} from '@capacitor/barcode-scanner';
 
-	let imageUrl: string | undefined;
-	let qrCodeData: string | undefined;
-	let scanError: string | undefined;
+	let imageUrl = $state<string | undefined>(undefined);
+	let qrCodeData = $state<string | undefined>(undefined);
+	let scanError = $state<string | undefined>(undefined);
 
 	async function takePicture() {
 		try {
