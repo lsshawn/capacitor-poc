@@ -40,44 +40,34 @@
 	}
 </script>
 
-<h1>Capacitor POC</h1>
+<div class="flex flex-col gap-2">
+	<button class="btn btn-primary" onclick={takePicture}>Take Photo</button>
 
-<div class="card">
-	<button on:click={takePicture}>Take Photo</button>
+	{#if imageUrl}
+		<div class="card">
+			<h2>Photo</h2>
+			<img src={imageUrl} alt="Taken with camera" />
+		</div>
+	{/if}
+
+	<button class="btn btn-primary" onclick={scanQRCode}>Scan QR Code</button>
+
+	{#if qrCodeData}
+		<div class="card">
+			<h2>QR Code Data</h2>
+			<p>{qrCodeData}</p>
+		</div>
+	{/if}
+
+	{#if scanError}
+		<div class="card">
+			<h2>Error Scanning</h2>
+			<p style="color: red;">{scanError}</p>
+		</div>
+	{/if}
 </div>
-
-{#if imageUrl}
-	<div class="card">
-		<h2>Photo</h2>
-		<img src={imageUrl} alt="Taken with camera" />
-	</div>
-{/if}
-
-<div class="card">
-	<button on:click={scanQRCode}>Scan QR Code</button>
-</div>
-
-{#if qrCodeData}
-	<div class="card">
-		<h2>QR Code Data</h2>
-		<p>{qrCodeData}</p>
-	</div>
-{/if}
-
-{#if scanError}
-	<div class="card">
-		<h2>Error Scanning</h2>
-		<p style="color: red;">{scanError}</p>
-	</div>
-{/if}
 
 <style>
-	.card {
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		padding: 16px;
-		margin: 16px 0;
-	}
 	img {
 		max-width: 100%;
 		height: auto;
