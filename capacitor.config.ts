@@ -7,6 +7,10 @@ const config: CapacitorConfig = {
 	appName: 'capacitor-poc2',
 	webDir: 'build',
 	plugins: {
+		SplashScreen: {
+			launchAutoHide: false,
+			launchShowDuration: 0
+		},
 		BackgroundRunner: {
 			label: 'com.example.background.task',
 			src: 'runners/background.js',

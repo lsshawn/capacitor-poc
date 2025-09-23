@@ -6,6 +6,7 @@
 		CapacitorBarcodeScannerTypeHint
 	} from '@capacitor/barcode-scanner';
 	import { PushNotifications, type PushNotificationSchema } from '@capacitor/push-notifications';
+	import { SplashScreen } from '@capacitor/splash-screen';
 
 	let imageUrl: string | undefined;
 	let qrCodeData: string | undefined;
@@ -14,7 +15,10 @@
 	let pushError: string | undefined;
 	let receivedNotifications: PushNotificationSchema[] = [];
 
-	onMount(() => {
+	onMount(async () => {
+		// Hide splash screen once app is loaded
+		await SplashScreen.hide();
+		
 		// Add listeners for push notifications
 		PushNotifications.addListener('registration', (token) => {
 			console.info('Registration token: ', token.value);
