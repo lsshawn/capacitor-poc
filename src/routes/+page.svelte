@@ -1,169 +1,143 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-	import {
-		CapacitorBarcodeScanner,
-		CapacitorBarcodeScannerTypeHint
-	} from '@capacitor/barcode-scanner';
-	import { PushNotifications, type PushNotificationSchema } from '@capacitor/push-notifications';
+	import { BackgroundRunner } from '@capacitor/background-runner';
 	import { SplashScreen } from '@capacitor/splash-screen';
 
-	let imageUrl: string | undefined;
-	let qrCodeData: string | undefined;
-	let scanError: string | undefined;
-	let pushToken: string | undefined;
-	let pushError: string | undefined;
-	let receivedNotifications: PushNotificationSchema[] = [];
+	// Simple state
+	let status = 'Ready';
+	let backgroundData: any = null;
+	let statusInterval: number;
 
 	onMount(async () => {
-		// Hide splash screen once app is loaded
 		await SplashScreen.hide();
-		
-		// Add listeners for push notifications
-		PushNotifications.addListener('registration', (token) => {
-			console.info('Registration token: ', token.value);
-			pushToken = token.value;
-		});
-
-		PushNotifications.addListener('registrationError', (err) => {
-			console.error('Registration error: ', err.error);
-			pushError = err.error;
-		});
-
-		PushNotifications.addListener('pushNotificationReceived', (notification) => {
-			console.log('Push notification received: ', notification);
-			receivedNotifications = [...receivedNotifications, notification];
-		});
-
-		PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
-			console.log(
-				'Push notification action performed',
-				notification.actionId,
-				notification.inputValue
-			);
-			// Maybe navigate to a specific page
-		});
+		startStatusMonitoring();
 	});
 
-	async function takePicture() {
+	// Check background runner status
+	async function checkStatus() {
 		try {
-			const image = await Camera.getPhoto({
-				quality: 90,
-				allowEditing: false,
-				resultType: CameraResultType.Uri,
-				source: CameraSource.Camera
+			const result = await BackgroundRunner.dispatchEvent({
+				label: 'com.example.background.fetcher',
+				event: 'status'
 			});
-			imageUrl = image.webPath;
+			backgroundData = result;
+		status = `Auto-Running - Heartbeat instances active`;
 		} catch (error) {
-			console.error('Error taking picture', error);
+			status = 'Error';
 		}
 	}
 
-	async function scanQRCode() {
-		qrCodeData = undefined;
-		scanError = undefined;
-		try {
-			const result = await CapacitorBarcodeScanner.scanBarcode({
-				hint: CapacitorBarcodeScannerTypeHint.ALL
-			});
-			if (result.scanResult) {
-				qrCodeData = result.scanResult;
-			}
-		} catch (error: any) {
-			console.error(error);
-			scanError = error.message;
-		}
+	function startStatusMonitoring() {
+		checkStatus();
+		statusInterval = setInterval(checkStatus, 2000);
 	}
 
-	async function registerForPush() {
-		pushToken = undefined;
-		pushError = undefined;
-		try {
-			let permStatus = await PushNotifications.checkPermissions();
-
-			if (permStatus.receive === 'prompt') {
-				permStatus = await PushNotifications.requestPermissions();
-			}
-
-			if (permStatus.receive !== 'granted') {
-				throw new Error('User denied permissions!');
-			}
-
-			await PushNotifications.register();
-		} catch (e: any) {
-			console.error(e);
-			pushError = e.message;
-		}
-	}
+	
 </script>
 
-<h1>Capacitor POC</h1>
+<h1>Background Runner Test</h1>
 
 <div class="card">
-	<button on:click={takePicture}>Take Photo</button>
+	<h2>Status: {status}</h2>
+	
+	<div class="data">
+		<p><strong>Status:</strong> Background heartbeat is auto-running</p>
+		<p><strong>Note:</strong> Each status check creates a new instance, but heartbeats continue in background</p>
+		
+		{#if backgroundData}
+			<div class="heartbeat">
+				<h3>Latest Instance Data:</h3>
+				<p><strong>Instance Heartbeat Count:</strong> {backgroundData.heartbeatCount}</p>
+				{#if backgroundData.uptime}
+					<p><strong>Instance Uptime:</strong> {backgroundData.uptime} seconds</p>
+				{/if}
+				{#if backgroundData.timestamp}
+					<p><strong>Last Check:</strong> {new Date(backgroundData.timestamp).toLocaleString()}</p>
+				{/if}
+				<p><strong>Message:</strong> {backgroundData.message || 'Heartbeat running'}</p>
+			</div>
+		{/if}
+	</div>
+	
+	<p class="help">
+		<strong>How it works:</strong> The background runner automatically starts a heartbeat when loaded. 
+		Each status check may show a new instance (due to Capacitor's architecture), but multiple heartbeat 
+		timers are running in parallel in the background.
+		<br><br>
+		<strong>To test:</strong> Put the app in background mode for 30+ seconds, then return. 
+		You should see console logs showing continuous heartbeat activity proving background execution works!
+	</p>
 </div>
-
-{#if imageUrl}
-	<div class="card">
-		<h2>Photo</h2>
-		<img src={imageUrl} alt="Taken with camera" />
-	</div>
-{/if}
-
-<div class="card">
-	<button on:click={scanQRCode}>Scan QR Code</button>
-</div>
-
-{#if qrCodeData}
-	<div class="card">
-		<h2>QR Code Data</h2>
-		<p>{qrCodeData}</p>
-	</div>
-{/if}
-
-{#if scanError}
-	<div class="card">
-		<h2>Error Scanning</h2>
-		<p style="color: red;">{scanError}</p>
-	</div>
-{/if}
-
-<div class="card">
-	<button on:click={registerForPush}>Register for Push Notifications</button>
-</div>
-
-{#if pushToken}
-	<div class="card">
-		<h2>Push Token</h2>
-		<p style="word-break: break-all;">{pushToken}</p>
-	</div>
-{/if}
-
-{#if pushError}
-	<div class="card">
-		<h2>Push Error</h2>
-		<p style="color: red;">{pushError}</p>
-	</div>
-{/if}
-
-{#if receivedNotifications.length > 0}
-	<div class="card">
-		<h2>Received Notifications</h2>
-		{#each receivedNotifications as notification}
-			<pre>{JSON.stringify(notification, null, 2)}</pre>
-		{/each}
-	</div>
-{/if}
 
 <style>
 	.card {
-		border: 1px solid #ccc;
-		border-radius: 8px;
-		padding: 16px;
-		margin: 16px 0;
+		border: 2px solid #4a90e2;
+		border-radius: 12px;
+		padding: 20px;
+		margin: 20px auto;
+		max-width: 600px;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		color: white;
+		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 	}
-	img {
-		max-width: 100%;
-		height: auto;
+
+	.data {
+		margin: 15px 0;
+	}
+
+	.heartbeat {
+		background: rgba(255, 255, 255, 0.1);
+		padding: 15px;
+		margin: 10px 0;
+		border-radius: 8px;
+	}
+
+
+	.buttons {
+		display: flex;
+		gap: 10px;
+		margin: 20px 0;
+		flex-wrap: wrap;
+	}
+
+	button {
+		background: rgba(255, 255, 255, 0.2);
+		border: 2px solid rgba(255, 255, 255, 0.3);
+		color: white;
+		padding: 10px 15px;
+		border-radius: 6px;
+		cursor: pointer;
+		transition: all 0.2s;
+		flex: 1;
+		min-width: 120px;
+	}
+
+	button:hover {
+		background: rgba(255, 255, 255, 0.3);
+		transform: translateY(-1px);
+	}
+
+	.help {
+		background: rgba(255, 255, 255, 0.1);
+		padding: 15px;
+		border-radius: 8px;
+		margin-top: 15px;
+		font-size: 0.9em;
+		line-height: 1.4;
+	}
+
+	h1 {
+		text-align: center;
+		color: #333;
+		margin-bottom: 30px;
+	}
+
+	h2 {
+		margin-top: 0;
+	}
+
+	h3 {
+		margin-top: 0;
+		color: #e0e0e0;
 	}
 </style>

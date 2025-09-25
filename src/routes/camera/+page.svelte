@@ -1,13 +1,7 @@
 <script lang="ts">
 	import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-	import {
-		CapacitorBarcodeScanner,
-		CapacitorBarcodeScannerTypeHint
-	} from '@capacitor/barcode-scanner';
 
 	let imageUrl = $state<string | undefined>(undefined);
-	let qrCodeData = $state<string | undefined>(undefined);
-	let scanError = $state<string | undefined>(undefined);
 
 	async function takePicture() {
 		try {
@@ -23,24 +17,10 @@
 		}
 	}
 
-	async function scanQRCode() {
-		qrCodeData = undefined;
-		scanError = undefined;
-		try {
-			const result = await CapacitorBarcodeScanner.scanBarcode({
-				hint: CapacitorBarcodeScannerTypeHint.ALL
-			});
-			if (result.scanResult) {
-				qrCodeData = result.scanResult;
-			}
-		} catch (error: any) {
-			console.error(error);
-			scanError = error.message;
-		}
-	}
 </script>
 
-<div class="flex flex-col gap-2">
+<div class="camera-container">
+	<h1>Camera</h1>
 	<button class="btn btn-primary" onclick={takePicture}>Take Photo</button>
 
 	{#if imageUrl}
@@ -49,27 +29,58 @@
 			<img src={imageUrl} alt="Taken with camera" />
 		</div>
 	{/if}
-
-	<button class="btn btn-primary" onclick={scanQRCode}>Scan QR Code</button>
-
-	{#if qrCodeData}
-		<div class="card">
-			<h2>QR Code Data</h2>
-			<p>{qrCodeData}</p>
-		</div>
-	{/if}
-
-	{#if scanError}
-		<div class="card">
-			<h2>Error Scanning</h2>
-			<p style="color: red;">{scanError}</p>
-		</div>
-	{/if}
+	
+	<p class="info">For QR/Barcode scanning, use the Scanner tab in the navigation.</p>
 </div>
 
 <style>
+	.camera-container {
+		padding: 20px;
+		max-width: 600px;
+		margin: 0 auto;
+	}
+	
+	h1 {
+		text-align: center;
+		margin-bottom: 30px;
+		color: var(--color-text);
+	}
+	
+	.btn {
+		background: var(--color-theme-1);
+		color: white;
+		border: none;
+		padding: 12px 24px;
+		border-radius: 8px;
+		font-size: 16px;
+		cursor: pointer;
+		transition: background-color 0.2s;
+		display: block;
+		margin: 0 auto 20px;
+	}
+	
+	.btn:hover {
+		background: var(--color-theme-2);
+	}
+	
+	.card {
+		border: 1px solid #ddd;
+		border-radius: 8px;
+		padding: 20px;
+		margin: 20px 0;
+		background: white;
+	}
+	
 	img {
 		max-width: 100%;
 		height: auto;
+		border-radius: 8px;
+	}
+	
+	.info {
+		text-align: center;
+		color: #666;
+		font-style: italic;
+		margin-top: 30px;
 	}
 </style>

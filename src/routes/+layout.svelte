@@ -17,6 +17,11 @@
 			label: 'GPS',
 			icon: 'ic:outline-map',
 			href: '/gps'
+		},
+		{
+			label: 'Scanner',
+			icon: 'mdi:qrcode-scan',
+			href: '/scanner'
 		}
 	];
 </script>
