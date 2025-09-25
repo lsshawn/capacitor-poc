@@ -4,9 +4,9 @@
 	import { SplashScreen } from '@capacitor/splash-screen';
 
 	// Simple state
-	let status = 'Ready';
-	let backgroundData: any = null;
-	let statusInterval: number;
+	let status = $state('Ready');
+	let backgroundData: any | undefined = $state(undefined);
+	let statusInterval: number | undefined = $state(undefined);
 
 	onMount(async () => {
 		await SplashScreen.hide();
@@ -21,7 +21,7 @@
 				event: 'status'
 			});
 			backgroundData = result;
-		status = `Auto-Running - Heartbeat instances active`;
+			status = `Auto-Running - Heartbeat instances active`;
 		} catch (error) {
 			status = 'Error';
 		}
@@ -31,19 +31,19 @@
 		checkStatus();
 		statusInterval = setInterval(checkStatus, 2000);
 	}
-
-	
 </script>
 
 <h1>Background Runner Test</h1>
 
 <div class="card">
 	<h2>Status: {status}</h2>
-	
+
 	<div class="data">
 		<p><strong>Status:</strong> Background heartbeat is auto-running</p>
-		<p><strong>Note:</strong> Each status check creates a new instance, but heartbeats continue in background</p>
-		
+		<p>
+			<strong>Note:</strong> Each status check creates a new instance, but heartbeats continue in background
+		</p>
+
 		{#if backgroundData}
 			<div class="heartbeat">
 				<h3>Latest Instance Data:</h3>
@@ -58,14 +58,14 @@
 			</div>
 		{/if}
 	</div>
-	
+
 	<p class="help">
-		<strong>How it works:</strong> The background runner automatically starts a heartbeat when loaded. 
-		Each status check may show a new instance (due to Capacitor's architecture), but multiple heartbeat 
-		timers are running in parallel in the background.
-		<br><br>
-		<strong>To test:</strong> Put the app in background mode for 30+ seconds, then return. 
-		You should see console logs showing continuous heartbeat activity proving background execution works!
+		<strong>How it works:</strong> The background runner automatically starts a heartbeat when
+		loaded. Each status check may show a new instance (due to Capacitor's architecture), but
+		multiple heartbeat timers are running in parallel in the background.
+		<br /><br />
+		<strong>To test:</strong> Put the app in background mode for 30+ seconds, then return. You should
+		see console logs showing continuous heartbeat activity proving background execution works!
 	</p>
 </div>
 
@@ -78,7 +78,7 @@
 		max-width: 600px;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		color: white;
-		box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 	}
 
 	.data {
@@ -91,7 +91,6 @@
 		margin: 10px 0;
 		border-radius: 8px;
 	}
-
 
 	.buttons {
 		display: flex;
