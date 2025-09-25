@@ -1,47 +1,49 @@
 PODS:
   - Capacitor (7.4.3):
     - CapacitorCordova
-  - CapacitorBarcodeScanner (2.1.0):
+  - CapacitorBackgroundRunner (2.1.0):
     - Capacitor
-    - OSBarcodeLib (= 2.0.1)
   - CapacitorCamera (7.0.2):
     - Capacitor
   - CapacitorCordova (7.4.3)
   - CapacitorGeolocation (7.1.5):
     - Capacitor
     - IONGeolocationLib (= 1.0.1)
+  - CapacitorPreferences (7.0.2):
+    - Capacitor
   - CapacitorPushNotifications (7.0.3):
     - Capacitor
   - CapacitorSplashScreen (7.0.3):
     - Capacitor
   - IONGeolocationLib (1.0.1)
-  - OSBarcodeLib (2.0.1)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios`)"
-  - "CapacitorBarcodeScanner (from `../../node_modules/.pnpm/@capacitor+barcode-scanner@2.1.0_@capacitor+core@7.4.3/node_modules/@capacitor/barcode-scanner`)"
+  - "CapacitorBackgroundRunner (from `../../node_modules/.pnpm/@capacitor+background-runner@2.1.0_@capacitor+core@7.4.3/node_modules/@capacitor/background-runner`)"
   - "CapacitorCamera (from `../../node_modules/.pnpm/@capacitor+camera@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/camera`)"
   - "CapacitorCordova (from `../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios`)"
   - "CapacitorGeolocation (from `../../node_modules/.pnpm/@capacitor+geolocation@7.1.5_@capacitor+core@7.4.3/node_modules/@capacitor/geolocation`)"
+  - "CapacitorPreferences (from `../../node_modules/.pnpm/@capacitor+preferences@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/preferences`)"
   - "CapacitorPushNotifications (from `../../node_modules/.pnpm/@capacitor+push-notifications@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/push-notifications`)"
   - "CapacitorSplashScreen (from `../../node_modules/.pnpm/@capacitor+splash-screen@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/splash-screen`)"
 
 SPEC REPOS:
   trunk:
     - IONGeolocationLib
-    - OSBarcodeLib
 
 EXTERNAL SOURCES:
   Capacitor:
     :path: "../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios"
-  CapacitorBarcodeScanner:
-    :path: "../../node_modules/.pnpm/@capacitor+barcode-scanner@2.1.0_@capacitor+core@7.4.3/node_modules/@capacitor/barcode-scanner"
+  CapacitorBackgroundRunner:
+    :path: "../../node_modules/.pnpm/@capacitor+background-runner@2.1.0_@capacitor+core@7.4.3/node_modules/@capacitor/background-runner"
   CapacitorCamera:
     :path: "../../node_modules/.pnpm/@capacitor+camera@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/camera"
   CapacitorCordova:
     :path: "../../node_modules/.pnpm/@capacitor+ios@7.4.3_@capacitor+core@7.4.3/node_modules/@capacitor/ios"
   CapacitorGeolocation:
     :path: "../../node_modules/.pnpm/@capacitor+geolocation@7.1.5_@capacitor+core@7.4.3/node_modules/@capacitor/geolocation"
+  CapacitorPreferences:
+    :path: "../../node_modules/.pnpm/@capacitor+preferences@7.0.2_@capacitor+core@7.4.3/node_modules/@capacitor/preferences"
   CapacitorPushNotifications:
     :path: "../../node_modules/.pnpm/@capacitor+push-notifications@7.0.3_@capacitor+core@7.4.3/node_modules/@capacitor/push-notifications"
   CapacitorSplashScreen:
@@ -49,15 +51,15 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Capacitor: 28d6c01026a9a3f7156529498ec1f389a2a28dbc
-  CapacitorBarcodeScanner: f9e5fc9e38229761348277c9102bfe32f3eeff7e
+  CapacitorBackgroundRunner: e34ce1a45fce1944ff6691d97db178d9e575f031
   CapacitorCamera: f9e54db0a18bb218a8dc360907d63aaefe9209ff
   CapacitorCordova: 435121e81a2df4d0034f0fb11fcefab5104cfdb5
   CapacitorGeolocation: 84f868bea4c2499aebc3bb3a88fd0a508f87ab87
+  CapacitorPreferences: 65107ed7437d96ee72583df5763985e3c0ff2bc2
   CapacitorPushNotifications: bdd621fbd562be34a41f4a7b1750efa000447d5a
   CapacitorSplashScreen: e388b8e0ed0e982a9d3a40417f478e7a018a8763
   IONGeolocationLib: 20f9d0248a0b5264511fb57a37e25dd2badf797a
-  OSBarcodeLib: 57987d2eb1f916f701f4554e20e349b3cb83f023
 
-PODFILE CHECKSUM: bb94ad9f1be931975e0105eca0ce004e86ea5624
+PODFILE CHECKSUM: f03772cdc642924bd82dfb1ceb3f83605fed2ca4
 
 COCOAPODS: 1.16.2
