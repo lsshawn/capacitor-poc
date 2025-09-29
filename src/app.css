@@ -5,3 +5,94 @@
   themes: light --default, dark;
   logs: false;
 }
+
+/* iOS Safe Area Support */
+html, body {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+/* Safe area insets */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.safe-area-left {
+  padding-left: env(safe-area-inset-left);
+}
+
+.safe-area-right {
+  padding-right: env(safe-area-inset-right);
+}
+
+.safe-area-inset {
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+/* Fixed bottom navigation with safe area */
+.bottom-nav-safe {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid #e5e7eb;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 50;
+}
+
+/* Content with bottom nav spacing */
+.content-with-bottom-nav {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+
+/* Better emoji rendering */
+span[class*="text-"] {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", system-ui, -apple-system, sans-serif;
+}
+
+/* Ensure emojis render properly on iOS */
+.emoji-icon {
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: auto;
+}
+
+/* Debug safe area (uncomment to see safe area values) */
+/*
+.safe-area-debug::before {
+  content: "top: " env(safe-area-inset-top) " bottom: " env(safe-area-inset-bottom) " left: " env(safe-area-inset-left) " right: " env(safe-area-inset-right);
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 4px;
+  font-size: 10px;
+  z-index: 9999;
+}
+*/
+
+/* iOS specific improvements */
+@supports (padding: env(safe-area-inset-top)) {
+  .ios-safe-layout {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .ios-safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+}
