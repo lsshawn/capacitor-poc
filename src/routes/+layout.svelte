@@ -75,25 +75,25 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="flex flex-col min-h-screen ios-safe-layout safe-area-debug">
+<div class="flex flex-col min-h-screen ios-safe-layout">
 	<!-- Main Content -->
 	<main class="flex-1 container mx-auto p-4 content-with-bottom-nav">
 		<slot />
 	</main>
 	
 	<!-- Bottom Navigation -->
-	<nav class="bottom-nav-safe ios-safe-bottom">
-		<div class="flex justify-around items-center h-16 px-4">
+	<nav class="bottom-nav-safe">
+		<div class="flex justify-around items-center px-4">
 			{#each menus as menu}
 				<button 
-					class="flex flex-col items-center justify-center gap-1 px-4 py-2 transition-colors rounded-lg
+					class="flex flex-col items-center justify-center gap-1 px-6 py-3 min-h-[60px] transition-colors rounded-lg
 						{menu.href === $page.url.pathname 
 							? 'text-blue-600 bg-blue-50' 
 							: 'text-gray-600 hover:bg-gray-50'}"
 					onclick={() => goto(menu.href)}
 				>
 					<span class="text-2xl leading-none emoji-icon">{menu.icon}</span>
-					<span class="text-xs font-medium mt-1">{menu.label}</span>
+					<span class="text-xs font-medium">{menu.label}</span>
 				</button>
 			{/each}
 		</div>
