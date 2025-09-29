@@ -1,44 +1,101 @@
 <script lang="ts">
 	import '../app.css';
 	import favicon from '$lib/assets/favicon.svg';
-	import { page } from '$app/state';
-	import Icon from '@iconify/svelte';
+	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
-
-	let { children } = $props();
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	const menus = [
 		{
-			label: 'Camera',
-			icon: 'mdi:camera',
-			href: '/camera'
+			label: 'Map',
+			icon: '🗺',
+			href: '/'
 		},
 		{
-			label: 'GPS',
-			icon: 'ic:outline-map',
-			href: '/gps'
-		},
-		{
-			label: 'Scanner',
-			icon: 'mdi:qrcode-scan',
-			href: '/scanner'
+			label: 'History',
+			icon: '📋',
+			href: '/history'
 		}
 	];
+
+	onMount(async () => {
+		if (browser) {
+			// Add global error handlers
+			window.addEventListener('error', (event) => {
+				console.error('Global error caught:', {
+					message: event.error?.message || event.message || 'Unknown error',
+					filename: event.filename,
+					lineno: event.lineno,
+					colno: event.colno,
+					stack: event.error?.stack,
+					error: event.error
+				});
+			});
+
+			window.addEventListener('unhandledrejection', (event) => {
+				console.error('Unhandled promise rejection:', {
+					reason: event.reason,
+					message: event.reason?.message || 'Promise rejected',
+					stack: event.reason?.stack,
+					promise: event.promise
+				});
+			});
+
+			console.log('🚀 App initialization starting...');
+			
+			try {
+				// Initialize notifications listener
+				console.log('1. Initializing notification listeners...');
+				const { initialize } = await import('$lib/services/client-notifications');
+				await initialize();
+				console.log('✅ Notification listeners initialized');
+				
+				// Request permissions
+				console.log('2. Requesting permissions...');
+				const { initializePermissions } = await import('$lib/services/permissions');
+				const permissions = await initializePermissions();
+				console.log('✅ Permissions initialized:', permissions);
+				
+				console.log('🎉 App initialization complete!');
+			} catch (error) {
+				console.error('❌ App initialization failed:', {
+					message: error?.message || 'Unknown error',
+					name: error?.name || 'Unknown',
+					stack: error?.stack,
+					error: error
+				});
+			}
+		}
+	});
+
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<div class="container p-4">
-	{@render children?.()}
-</div>
-
-<div class="dock">
-	{#each menus as menu}
-		<button class:dock-active={menu.href === page.url.pathname} onclick={() => goto(menu.href)}>
-			<Icon icon={menu.icon} />
-			<span class="dock-label">{menu.label}</span>
-		</button>
-	{/each}
+<div class="flex flex-col min-h-screen ios-safe-layout safe-area-debug">
+	<!-- Main Content -->
+	<main class="flex-1 container mx-auto p-4 content-with-bottom-nav">
+		<slot />
+	</main>
+	
+	<!-- Bottom Navigation -->
+	<nav class="bottom-nav-safe ios-safe-bottom">
+		<div class="flex justify-around items-center h-16 px-4">
+			{#each menus as menu}
+				<button 
+					class="flex flex-col items-center justify-center gap-1 px-4 py-2 transition-colors rounded-lg
+						{menu.href === $page.url.pathname 
+							? 'text-blue-600 bg-blue-50' 
+							: 'text-gray-600 hover:bg-gray-50'}"
+					onclick={() => goto(menu.href)}
+				>
+					<span class="text-2xl leading-none emoji-icon">{menu.icon}</span>
+					<span class="text-xs font-medium mt-1">{menu.label}</span>
+				</button>
+			{/each}
+		</div>
+	</nav>
 </div>
