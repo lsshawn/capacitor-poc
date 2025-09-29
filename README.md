@@ -10,6 +10,28 @@ This app demonstrates that:
 - ✅ Background runners can maintain activity without user interaction
 - ✅ Console logs prove background execution is working
 
+
+Features Implemented:
+
+1. Background Location Tracking 
+- Foreground tracking via `watchPosition`
+- Background coordination via `BackgroundRunner`
+- Location data saved to trip paths
+
+2. Push/Local Notifications 
+- Ride request simulation working
+- Notification tap handlers registered
+- Deep linking to ride details ready
+
+3. Trip History 
+- Persistent storage via Preferences
+- Real location points being saved
+- Trip data accumulating correctly
+
+[iOS Video Demo](./static/ios-demo-video.mp4)
+
+Note: Push notification doesn't work in Android at the moment because it requires [Firebase](https://capacitorjs.com/docs/apis/push-notifications#android)
+
 ## 🚀 Quick Start
 
 ### Local Development
