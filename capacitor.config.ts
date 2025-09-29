@@ -12,12 +12,12 @@ const config: CapacitorConfig = {
 			launchShowDuration: 0
 		},
 		BackgroundRunner: {
-			label: 'com.example.background.fetcher',
-			src: 'runners/background.js',
-			event: 'status',
-			repeat: false,
-			interval: 15,
-			autoStart: true
+			label: 'com.example.background.location',
+			src: 'runners/location.js',
+			event: 'locationUpdate',
+			repeat: true,
+			interval: 30,
+			autoStart: false
 		}
 	}
 };
