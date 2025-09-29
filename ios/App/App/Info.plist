@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.example.background.counter</string>
+		<string>com.example.background.location</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
@@ -26,17 +26,17 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>This app needs access to camera to scan barcodes and QR codes</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app uses location services for GPS functionality when the app is active</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app uses location services for GPS functionality in background and foreground</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app uses location services for GPS functionality when the app is active</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>background-processing</string>
 		<string>location</string>
 		<string>remote-notification</string>
+		<string>fetch</string>
+		<string>processing</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
