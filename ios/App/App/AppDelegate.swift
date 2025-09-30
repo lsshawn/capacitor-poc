@@ -4,6 +4,8 @@ import Capacitor
 import BackgroundTasks
 // Import the BackgroundRunner plugin module
 import CapacitorBackgroundRunner
+// Import UserNotifications framework for notifications
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,6 +17,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 2. Register the background task handler on app launch
         self.registerBackgroundTasks()
+        
+        // Register for push notifications
+        UNUserNotificationCenter.current().delegate = self
         
         return true
     }
@@ -114,4 +119,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
+}
+
+// MARK: - UNUserNotificationCenterDelegate
+extension AppDelegate: UNUserNotificationCenterDelegate {
+    
+    // This method is called when a notification is delivered to a foreground app.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Show the notification even when the app is in foreground
+        completionHandler([.alert, .sound, .badge])
+    }
+    
+    // This method is called when the user interacts with a notification.
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        // Handle notification tap
+        NotificationCenter.default.post(name: .capacitorNotificationResponse, object: response)
+        completionHandler()
+    }
+    
+    // For push notifications
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        NotificationCenter.default.post(name: .capacitorDidRegisterForRemoteNotifications, object: deviceToken)
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        NotificationCenter.default.post(name: .capacitorDidFailToRegisterForRemoteNotifications, object: error)
+    }
+    
 }
